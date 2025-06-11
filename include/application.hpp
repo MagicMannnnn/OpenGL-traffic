@@ -41,6 +41,13 @@ public:
 private:
     void mainGameLoop() {
         render();
+
+        if (Global::R) {
+            m_roadManager.reGenerate();
+        }
+        if (Global::P) {
+            m_roadManager.demoPath();
+        }
     }
 
 

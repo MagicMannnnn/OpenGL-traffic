@@ -11,7 +11,7 @@ namespace Global {
     
 
     GLFWwindow* window;
-    Camera camera(glm::vec3(0.0f, 10.f, 0.f));
+    Camera camera(glm::vec3(0.0f, Settings::GRID_HEIGHT + 5.f, 0.f));
     float mouseX = Settings::SCR_WIDTH / 2.0f;
     float mouseY = Settings::SCR_HEIGHT / 2.0f;
     float mouseLastX = Settings::SCR_WIDTH / 2.0f;
@@ -28,7 +28,8 @@ namespace Global {
     bool typing = false;
 
 
-
+    bool R = false, prevR = false;
+    bool P = false, prevP = false;
 
 
     float deltaTime = 0.0f;
@@ -44,7 +45,8 @@ namespace Global {
     void processInput(GLFWwindow* window)
     {
 
-
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
 
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
             camera.setFastVelocity(true);
@@ -66,11 +68,27 @@ namespace Global {
 
 
 
+        R = false;
+        P = false;
 
+        struct KeyDef {
+            int key;
+            bool& prev, & move;
+        };
 
-
+        static KeyDef keys[] = {
+            {GLFW_KEY_R, prevR, R},
+            {GLFW_KEY_P, prevP, P}
+        };
         
-
+        for (auto& r : keys) {
+            bool curr = (glfwGetKey(window, r.key) == GLFW_PRESS);
+            // if just pressed this frame:
+            if (curr && !r.prev) {
+                r.move = true;
+            }
+            r.prev = curr;
+        }
 
 
     }
@@ -134,7 +152,6 @@ namespace Global {
             if (action == GLFW_PRESS) {
                 if (firstMouse) {
                     leftClick = true;
-                    glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
                 }
                 firstMouse = false;
                 
@@ -142,7 +159,6 @@ namespace Global {
             if (action == GLFW_RELEASE) {
                 firstMouse = true;
                 leftClick = false;
-                glfwSetInputMode(Global::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
         }
 

@@ -12,6 +12,8 @@
 static struct Settings {
     inline static int SCR_WIDTH = 800;
     inline static int SCR_HEIGHT = 600;
+    inline static const int GRID_WIDTH = 25;
+    inline static const int GRID_HEIGHT = 25;
 
     inline static glm::vec3 BG_COLOUR = glm::vec3(0.8f, 0.8f, 0.8f); 
 

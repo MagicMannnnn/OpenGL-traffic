@@ -45,6 +45,7 @@ namespace Setup {
         // configure global opengl state
         // -----------------------------
         glEnable(GL_DEPTH_TEST);
+        glRenderMode(GL_RGBA);
         //glEnable(GL_CULL_FACE);       // Enable culling
         //glCullFace(GL_BACK);          // Cull back faces
        // glFrontFace(GL_CCW);          // Counter-clockwise is the front face
