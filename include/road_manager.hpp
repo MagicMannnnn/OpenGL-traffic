@@ -23,7 +23,7 @@ public:
 		m_tJunction(RESOURCES_PATH"textures/t-junction.png", 1, 1),
 		m_crossRoads(RESOURCES_PATH"textures/crossRoads.png", 1, 1),
 		m_corner(RESOURCES_PATH"textures/corner.png", 1, 1),
-		m_path(RESOURCES_PATH"textures/red3.png", 1, 1),
+		m_path(RESOURCES_PATH"textures/red2.png", 1, 1),
 		m_floor(RESOURCES_PATH"textures/floor.png", Settings::GRID_WIDTH, Settings::GRID_HEIGHT)
 	{
 		m_floorTile = RoadTile(glm::vec3(0, -0.1f, 0), 0);
@@ -52,50 +52,8 @@ public:
 
 	void demoPath() {
 
-		std::cout << "\nfinding path...\n";
-
-
-		glm::ivec2 start = m_pathFinder.getRandomEdgePoint();
-		int attempts = 0;
-		while (start == glm::ivec2(-1, -1) && attempts < 5) {
-			start = m_pathFinder.getRandomEdgePoint();
-		}
-		if (start == glm::ivec2(-1, -1)) return;
-
-		
-
-		int edge;
-		if (start.x == 0) {
-			edge = 1;
-		}
-		else if (start.y == 0) {
-			edge = 2;
-		}
-		else if (start.x == Settings::GRID_WIDTH - 1) {
-			edge = 3;
-		}
-		else {
-			edge = 0;
-		}
-
-		attempts = 0;
-		glm::ivec2 end = m_pathFinder.getRandomEdgePoint(edge);
-
-		while (start == end && attempts < 10 && end != glm::ivec2(-1, -1)) {
-			end = m_pathFinder.getRandomEdgePoint(edge);
-		}
-		if (start == end) return;
-
-		//either attempt multiple times for finding a route, or change bfs to allow multiple paths to be found (try first one by attempting different middle points x times and checking if paths overlap using td::vector<glm::ivec2> path
-
-		/*
-		glm::ivec2 middle;
-		attempts = 0;
-		while (middle == glm::ivec2(-1, -1) && attempts < 5) {
-			middle = m_pathFinder.getRandomEdgePoint();
-		}*/
-
-		std::vector<glm::ivec2> path = m_pathFinder.findPath(start, end);
+		std::cout << "\nfinding path...\n";	
+		std::vector<glm::ivec2> path = m_pathFinder.findPathThroughCheckpoint();
 
 		if (path.empty()) return;
 		std::cout << "found path! \n";
@@ -104,17 +62,18 @@ public:
 		for (const auto& coord : path) {
 			glm::vec3 pos(
 				coord.x - (float)(Settings::GRID_WIDTH - 1) / 2.0f,
-				0.1f,
+				0.01f,
 				coord.y - (float)(Settings::GRID_HEIGHT - 1) / 2.0f
 			);
 
-			// Road type doesn't really matter here for path-following, can default to STRAIGHT or infer if needed
+			
 			m_pathTiles.emplace_back(pos, 0.0f, PATH);
 		}
 	}
 
 	void Render(glm::mat4& projection, Camera& camera) {
-		glRenderMode(GL_RGBA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		m_shader.use();
 		m_shader.setMat4("projection", projection);
 		m_shader.setMat4("view", camera.GetViewMatrix());

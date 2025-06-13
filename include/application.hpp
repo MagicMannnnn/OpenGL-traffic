@@ -3,7 +3,7 @@
 
 #include <app_input.hpp>
 #include <road_manager.hpp>
-
+#include <car_manager.hpp>
 
 class App {
 public:
@@ -15,6 +15,8 @@ public:
 
         float timer = 0.f;
         int frameCounter = 0;
+
+        m_carManager = CarManager();
 
         while (!glfwWindowShouldClose(m_window)) {
 
@@ -53,6 +55,16 @@ private:
 
     void render() {
         m_roadManager.Render(m_projection, m_camera);
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR) std::cout << "GL error after road render: " << err << std::endl;
+
+
+        m_carManager.Render(m_projection, m_camera);
+        err = glGetError();
+        if (err != GL_NO_ERROR) std::cout << "GL error after car render: " << err << std::endl;
+
+        
+
     }
 
 
@@ -63,4 +75,5 @@ private:
     GLFWwindow*& m_window = Global::window;
     glm::mat4 m_projection = glm::perspective(glm::radians(m_camera.Zoom), (float)Settings::SCR_WIDTH / (float)Settings::SCR_HEIGHT, 0.1f, 500.0f);
     RoadManager m_roadManager;
+    CarManager m_carManager;
 };

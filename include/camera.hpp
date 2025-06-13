@@ -122,9 +122,8 @@ public:
 
         if ((Position.y == MAX_HEIGHT && yoffset < 0) || (Position.y == MIN_HEIGHT && yoffset > 0)) return;
 
-        Position += yoffset * Front * MovementSpeed * deltaTime * 10.f * (Position.y / (MAX_HEIGHT / 3.f));
+        Position += yoffset * Front * MovementSpeed * deltaTime * 10.f * (Position.y / (MAX_HEIGHT / 3.f)) * 5.f;
 
-        std::cout << Position.y << " ";
 
         if (Position.y > MAX_HEIGHT) {
             Position.y = MAX_HEIGHT;

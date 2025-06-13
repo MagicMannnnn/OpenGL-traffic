@@ -21,7 +21,7 @@ struct RoadTile {
 	glm::mat4 model;
 	glm::vec3 position;
 	float angle;
-	ROADTYPE type = NONE;
+	ROADTYPE type = ROADTYPE::NONE;
 
 	RoadTile() = default;
 	RoadTile(glm::vec3 _position, float _angle, ROADTYPE _type = STRAIGHT) {
@@ -42,7 +42,7 @@ struct RoadGenerator {
 
 
 	static void generate(std::array<std::array<int, Settings::GRID_WIDTH>, Settings::GRID_HEIGHT>& grid) {
-		int roadsLeft = Settings::GRID_HEIGHT / 2;
+		int roadsLeft = Settings::GRID_HEIGHT / 2 * 1.5;
 		for (std::array<int, Settings::GRID_HEIGHT>& row : grid) {
 			row.fill(0);
 		}
@@ -165,7 +165,7 @@ struct RoadGenerator {
 				bool l = x == 0 || Igrid[y][x - 1] > 0;
 
 				glm::vec3 position(x - ((float)(Settings::GRID_WIDTH-1.f) / 2.f), 0.0f, y - ((float)(Settings::GRID_HEIGHT-1) / 2.f)); // Adjust position to center the grid
-				ROADTYPE type = NONE;
+				ROADTYPE type = ROADTYPE::NONE;
 				float angle = 0.0f;
 
 				// Determine the road type and rotation
