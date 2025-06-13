@@ -62,12 +62,38 @@ public:
 		}
 		if (start == glm::ivec2(-1, -1)) return;
 
+		
+
+		int edge;
+		if (start.x == 0) {
+			edge = 1;
+		}
+		else if (start.y == 0) {
+			edge = 2;
+		}
+		else if (start.x == Settings::GRID_WIDTH - 1) {
+			edge = 3;
+		}
+		else {
+			edge = 0;
+		}
+
 		attempts = 0;
-		glm::ivec2 end = m_pathFinder.getRandomEdgePoint();
-		while (start == end && attempts < 10) {
-			end = m_pathFinder.getRandomEdgePoint();
+		glm::ivec2 end = m_pathFinder.getRandomEdgePoint(edge);
+
+		while (start == end && attempts < 10 && end != glm::ivec2(-1, -1)) {
+			end = m_pathFinder.getRandomEdgePoint(edge);
 		}
 		if (start == end) return;
+
+		//either attempt multiple times for finding a route, or change bfs to allow multiple paths to be found (try first one by attempting different middle points x times and checking if paths overlap using td::vector<glm::ivec2> path
+
+		/*
+		glm::ivec2 middle;
+		attempts = 0;
+		while (middle == glm::ivec2(-1, -1) && attempts < 5) {
+			middle = m_pathFinder.getRandomEdgePoint();
+		}*/
 
 		std::vector<glm::ivec2> path = m_pathFinder.findPath(start, end);
 
@@ -76,7 +102,6 @@ public:
 		m_pathTiles.clear();
 
 		for (const auto& coord : path) {
-			std::cout << coord.x << ", " << coord.y << "  ";
 			glm::vec3 pos(
 				coord.x - (float)(Settings::GRID_WIDTH - 1) / 2.0f,
 				0.1f,

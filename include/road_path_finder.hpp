@@ -54,6 +54,54 @@ public:
         return glm::ivec2(-1,-1);
     }
 
+    glm::ivec2 getRandomEdgePoint(int edge) const {
+        for (int attempts = 0; attempts < 100; ++attempts) {
+            int x = 0, y = 0;
+
+            switch (edge) {
+            case 0:  // Top
+                x = Random::getRangeInt(0, Settings::GRID_WIDTH - 1);
+                y = 0;
+                break;
+            case 1:  // Right
+                x = Settings::GRID_WIDTH - 1;
+                y = Random::getRangeInt(0, Settings::GRID_HEIGHT - 1);
+                break;
+            case 2:  // Bottom
+                x = Random::getRangeInt(0, Settings::GRID_WIDTH - 1);
+                y = Settings::GRID_HEIGHT - 1;
+                break;
+            case 3:  // Left
+                x = 0;
+                y = Random::getRangeInt(0, Settings::GRID_HEIGHT - 1);
+                break;
+            }
+
+            if (grid[y][x] > 0) {
+                return glm::ivec2(x, y);
+            }
+        }
+
+        // Fallback: return center if no edge road found
+        return glm::ivec2(-1, -1);
+    }
+
+
+    glm::ivec2 getRandomPoint() const {
+        
+        for (int i = 0; i < 100; i++) {
+            int x = Random::getRangeInt(0, Settings::GRID_WIDTH - 1);
+            int y = Random::getRangeInt(0, Settings::GRID_HEIGHT - 1);
+            if (grid[y][x] > 0) {
+                return glm::ivec2(x, y);
+            }
+        }
+
+        return glm::ivec2(-1, -1);
+
+    }
+
+
     // Find a path between start and end (returns list of positions in grid)
     std::vector<glm::ivec2> findPath(glm::ivec2 start, glm::ivec2 end) const {
         if (grid[start.y][start.x] == 0 || grid[end.y][end.x] == 0)
